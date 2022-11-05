@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 from collections import defaultdict
 import firebase_admin
