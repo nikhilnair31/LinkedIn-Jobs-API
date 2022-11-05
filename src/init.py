@@ -6,8 +6,11 @@ from firebase_admin import db
 from firebase_admin import credentials
 from linkedin_api import Linkedin
 
-# Setup stuff
 load_dotenv()
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# Setup stuff
 cred = {
   "type": "service_account",
   "project_id": "nikhil-nair",
@@ -85,7 +88,21 @@ def push_dict_to_firebase(dict):
 def print_dict(func_source, dict):
     print('\n', func_source, ':\n', dict)
 
+def handler(event, context): 
+    try:
+        get_dropdown_info()
+        get_posts_info()
+        push_dict_to_firebase(pushable_data_dict)
+        return {
+            'statusCode': 200,
+            'body': 'success bish'
+        }
+    except Exception as e: 
+        logger.error(f'logging f max: {e}\n\n')
+        return {
+            'statusCode': 400,
+            'body': 'f max'
+        }
+
 if __name__=="__main__":
-    get_dropdown_info()
-    get_posts_info()
-    push_dict_to_firebase(pushable_data_dict)
+    handler(None, None)
