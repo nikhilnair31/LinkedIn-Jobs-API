@@ -1,17 +1,32 @@
+import os
+from dotenv import load_dotenv
 from collections import defaultdict
 import firebase_admin
 from firebase_admin import db
 from firebase_admin import credentials
 from linkedin_api import Linkedin
 
-# Firebase setup stuff
-cred = credentials.Certificate("nikhil-nair-firebase-adminsdk-gamwn-2762285979.json")
-firebase_admin = firebase_admin.initialize_app(cred, {'databaseURL': 'https://nikhil-nair-default-rtdb.firebaseio.com'})
+# Setup stuff
+load_dotenv()
+cred = {
+  "type": "service_account",
+  "project_id": "nikhil-nair",
+  "private_key_id": os.environ["FIREBASE_ADMIN_PRIVATE_KEY_ID"],
+  "private_key": os.environ["FIREBASE_ADMIN_PRIVATE_KEY"].replace(r'\n', '\n'),
+  "client_email": os.environ["FIREBASE_ADMIN_CLIENT_EMAIL"],
+  "client_id": os.environ["FIREBASE_ADMIN_CLIENT_ID"],
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": os.environ["FIREBASE_ADMIN_CLIENT_X509_CERT_URL"]
+}
+cred = credentials.Certificate(cred)
+firebase_admin = firebase_admin.initialize_app(cred, {'databaseURL': os.environ["FIREBASE_DATABASE_URL"]})
 
 # Adding child to tore LinkedIn data only
 ref = db.reference("/linkedin_data/")
 # Authenticate using any Linkedin account credentials
-api = Linkedin('nikhilnair3118@gmail.com', 'aS7Q9iAYfh/nT-;')
+api = Linkedin(os.environ["EMAIL"], os.environ["PASS"])
 # Empty dict to fill up on each run
 pushable_data_dict = defaultdict(dict)
 
