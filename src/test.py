@@ -4,14 +4,14 @@
 # load_dotenv()
 # print(os.environ["email"])
 
-import json
+# import json
 
-data = json.load(open('src\cred.json'))
+# data = json.load(open('src\cred.json'))
 
-f = open(".env1", "x")
+# f = open(".env1", "x")
 
-for key, value in data.items():
-    f.write(f"{key.upper()}={value}\n")
+# for key, value in data.items():
+#     f.write(f"{key.upper()}={value}\n")
 
 
 # EMAIL='nikhilnair3118@gmail.com'
@@ -24,3 +24,20 @@ for key, value in data.items():
 # FIREBASE_ADMIN_CLIENT_EMAIL='firebase-adminsdk-gamwn@nikhil-nair.iam.gserviceaccount.com'
 # FIREBASE_ADMIN_CLIENT_ID='110227509871586027379'
 # FIREBASE_ADMIN_CLIENT_X509_CERT_URL="https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gamwn%40nikhil-nair.iam.gserviceaccount.com"
+
+import requests
+
+PROXYCURL_API_KEY = 'AKjT11L3-pcJI0lbvk5Iyw'  # todo - fill this field up
+
+def get_profile(profile_id):
+    api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
+    header_dic = {'Authorization': 'Bearer ' + PROXYCURL_API_KEY}
+    params = {
+        'url': f'https://www.linkedin.com/in/{profile_id}/',
+    }
+    response = requests.get(api_endpoint,
+                            params=params,
+                            headers=header_dic)
+    return response.json()
+
+print(get_profile('nikhilnair31'))
